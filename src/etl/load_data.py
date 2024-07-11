@@ -70,6 +70,5 @@ def load_data(df_data):
             """))
             conn.close()
         print('Data deduplication completed successfully.')
-        conn.close()
     except Exception as e:
         print('Error deduplicating data:', e)

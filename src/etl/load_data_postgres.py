@@ -28,18 +28,49 @@ def load_data_postgres(df_data):
     except Exception as e:
         print('Error loading data into the database:', e)
 
+    # try:
+    #     engine = sqlConnector()
+    #     df_data.to_sql(name=table_name, index=False, con=engine, schema=schema, if_exists='append', method='multi',
+    #                    chunksize=((2100 // len(df_data.columns)) - 1))
+    #     print(f'Inserted into {schema}.{table_name}')
+    # except Exception as e:
+    #     print('Error loading data into the database:', e)
+
     try:
         engine = sqlConnector()
         with engine.connect() as conn:
-            conn.execute(text(f"""
-                DELETE FROM {schema}.{table_name}
-                USING (
-                    SELECT id, inserted_at, 
-                    ROW_NUMBER() OVER (PARTITION BY id ORDER BY inserted_at DESC) as rnum
-                    FROM {schema}.{table_name}
-                ) t
-                WHERE {schema}.{table_name}.id = t.id AND {schema}.{table_name}.inserted_at = t.inserted_at AND t.rnum > 1;
-            """))
+            for index, row in df_data.iterrows():
+                # Verificar se o ID já existe
+                result = conn.execute(text(f"""
+                    SELECT 1 FROM {schema}.{table_name} WHERE id = :id
+                """), {"id": row['id']})
+
+                if result.fetchone():
+                    # Atualizar a linha existente
+                    conn.execute(text(f"""
+                        UPDATE {schema}.{table_name}
+                        SET userid = :userid, title = :title, body = :body, inserted_at = :inserted_at
+                        WHERE id = :id
+                    """), {
+                        "userid": row['userid'],
+                        "title": row['title'],
+                        "body": row['body'],
+                        "inserted_at": row['inserted_at'],
+                        "id": row['id']
+                    })
+                else:
+                    # Inserir novo dado
+                    conn.execute(text(f"""
+                        INSERT INTO {schema}.{table_name} (userid, id, title, body, inserted_at)
+                        VALUES (:userid, :id, :title, :body, :inserted_at)
+                    """), {
+                        "userid": row['userid'],
+                        "id": row['id'],
+                        "title": row['title'],
+                        "body": row['body'],
+                        "inserted_at": row['inserted_at']
+                    })
+            conn.close()
         print('Data deduplication completed successfully.')
     except Exception as e:
         print('Error deduplicating data:', e)
