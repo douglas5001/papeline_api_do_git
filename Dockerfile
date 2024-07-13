@@ -4,6 +4,9 @@ FROM python:3.12-slim
 # Definindo o diretório de trabalho dentro do container
 WORKDIR /app
 
+# Definindo o fuso horário
+ENV TZ=America/Sao_Paulo
+
 # Copiando o arquivo de dependências para o diretório de trabalho
 COPY requirements.txt .
 
