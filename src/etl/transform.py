@@ -4,7 +4,9 @@ import os
 import pandas as pd
 from datetime import datetime
 import glob
+import logging
 
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 def transform_data(df):
     #     # Obtém a data atual no formato YYYYMMDD
@@ -32,7 +34,7 @@ def transform_data(df):
 
     df_data = df_data.rename({
         'userId': 'userid',
-        'id': 'id',
+        'id': 'id_principal',
         'title': 'title',
         'body': 'body'
     }, axis=1)
@@ -52,6 +54,7 @@ def transform_data(df):
     timestamp = datetime.now().strftime('%d-%m-%Y_%H-%M-%S')
     csv_file = os.path.join(directory_today, f"dados_coletados_{timestamp}.xlsx")
     df_data.to_excel(csv_file, index=False)
+    logging.info("transformacao feita!!")
 
     return df_data
 

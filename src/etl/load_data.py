@@ -1,7 +1,9 @@
 import os
 from sqlalchemy import create_engine, text
 from dotenv import load_dotenv
+import logging
 
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 # Carrega as variáveis de ambiente do arquivo .env
 load_dotenv()
 
@@ -15,7 +17,7 @@ load_dotenv()
 def sqlConnector():
     server = os.getenv('HOST')
     database = os.getenv('DATABASE')
-    username = os.getenv('USER')
+    #username = os.getenv('USER')
     password = os.getenv('PASSWORD')
 
     engine = create_engine(f'mysql+pymysql://root:{password}@{server}:3306/{database}')
@@ -47,12 +49,14 @@ def load_data(df_data):
     #     df_data = pd.read_excel(file_path)
 
     try:
+        table_name = 'usuario'
+        schema = 'mysql_python'
         engine = sqlConnector()
         df_data.to_sql(name=table_name, index=False, con=engine, schema=schema, if_exists='append', method='multi',
                        chunksize=((2100 // len(df_data.columns)) - 1))
-        print(f'Inserted into {schema}.{table_name}')
+        logging.info(f'Inserted into {schema}.{table_name}')
     except Exception as e:
-        print('Error loading data into the database:', e)
+        logging.info('Error loading data into the database:', e)
 
     try:
         engine = sqlConnector()
@@ -61,14 +65,14 @@ def load_data(df_data):
                 DELETE t
                 FROM {schema}.{table_name} t
                 LEFT JOIN (
-                    SELECT id, MAX(inserted_at) AS max_data
+                    SELECT id_principal, MAX(inserted_at) AS max_data
                     FROM {schema}.{table_name}
-                    GROUP BY id
+                    GROUP BY id_principal
                 ) cte
-                ON t.id = cte.id AND t.inserted_at <> cte.max_data
-                WHERE cte.id IS NOT NULL
+                ON t.id_principal = cte.id_principal AND t.inserted_at <> cte.max_data
+                WHERE cte.id_principal IS NOT NULL
             """))
             conn.close()
-        print('Data deduplication completed successfully.')
+        logging.info('Data deduplication completed successfully.')
     except Exception as e:
-        print('Error deduplicating data:', e)
+        logging.info('Error deduplicating data:', e)

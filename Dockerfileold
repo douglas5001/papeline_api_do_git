@@ -1,0 +1,36 @@
+# Use uma imagem base do Python
+FROM python:3.12.4
+
+# Instale as dependências do sistema necessárias
+RUN apt-get update && apt-get install -y \
+    pkg-config \
+    libmariadb-dev-compat \
+    libmariadb-dev \
+    wget \
+    ntp \
+    && rm -rf /var/lib/apt/lists/*
+
+# Defina o diretório de trabalho no container
+WORKDIR /app
+
+# Copie o conteúdo do seu projeto para o diretório de trabalho
+COPY . /app
+
+# Crie o ambiente virtual sem pip
+RUN python -m venv --without-pip .venv
+
+# Baixe e instale a versão mais recente do pip
+RUN wget https://bootstrap.pypa.io/get-pip.py && \
+    .venv/bin/python get-pip.py && \
+    rm get-pip.py
+
+# Instale as dependências do projeto
+RUN .venv/bin/pip install --upgrade pip && \
+    .venv/bin/pip install -r requirements.txt
+
+# Ative o ambiente virtual e defina a variável de ambiente para o projeto
+ENV VIRTUAL_ENV=/app/.venv
+ENV PATH="$VIRTUAL_ENV/bin:$PATH"
+
+# Comando para rodar o script Python
+CMD ["python", "main.py"]

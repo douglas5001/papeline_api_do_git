@@ -1,0 +1,19 @@
+## Criar imagem docker apartir de um Dockerfile
+docker build -t pipeline .
+
+## Criar container
+docker run -d --name pipeline --network minha_rede -p 8000:8000 -v /etc/localtime:/etc/localtime:ro -v /:/host_root pipeline
+
+## Ver logs em tempo real
+docker logs -f pipeline
+
+## Acessar bash do container
+docker exec -it pipeline /bin/bash
+
+## Criar rede no docker
+docker network create minha_rede
+
+## Conectar outro container existente a rede
+docker network connect minha_rede meu_mysql
+
+

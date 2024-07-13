@@ -5,8 +5,9 @@ import requests
 import time
 from datetime import datetime
 import os
+import logging
 
-
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 # def extract_data():
 #     data = pd.read_csv('usuarios.csv')
 #     df = pd.DataFrame(data)
@@ -45,7 +46,7 @@ def extract_data():
         if requisicoes_diferentes_consultas >= limite_diferentes_consultas:
             if tempo_decorrido < (tempo_limite_minutos * 60):
                 tempo_espera = (tempo_limite_minutos * 60) - tempo_decorrido
-                print(
+                logging.info(
                     f"Limite de requisições para consultas diferentes atingido. Esperando {tempo_espera:.1f} segundos.")
                 time.sleep(tempo_espera)
             requisicoes_diferentes_consultas = 0
@@ -53,27 +54,27 @@ def extract_data():
 
         try:
             response = collect_date(page)
-            print(f"requisicao feita na pagina {page}")
-        except request.RequestException as e:
-            print(f"erro ao realizar requisicao {e}")
+            logging.info(f"requisicao feita na pagina {page}")
+        except requests.RequestException as e:
+            logging.info(f"erro ao realizar requisicao {e}")
             break
 
         if response.status_code == 200:
-            print("Requisicao 200 bem sucedida")
+            logging.info("Requisicao 200 bem sucedida")
         elif response.status_code == 429:
-            print("Requisicao bloqueada")
+            logging.info("Requisicao bloqueada")
             time.sleep(60 * 60)
             continue
         else:
-            print("Erro ao acessar a api")
-            print(f"Erro ao acessar a API: {response.status_code}")
+            logging.info("Erro ao acessar a api")
+            logging.info(f"Erro ao acessar a API: {response.status_code}")
         try:
             converted_file = response.json()
         except ValueError as e:
-            print(f"Erro ao decodificar json")
+            logging.info(f"Erro ao decodificar json")
             break
         if not converted_file:
-            print(F"Nenum dado recebido na padina {page}")
+            logging.info(F"Nenum dado recebido na padina {page}")
             break
 
         table = pd.DataFrame(converted_file)
