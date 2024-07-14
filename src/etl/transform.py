@@ -44,7 +44,7 @@ def transform_data(df):
     # df_data['cpf'] = df_data['cpf'].str.replace('.', '', regex=False).str.replace('-', '', regex=False)
 
     today = datetime.now().date()
-    directory = r"/Users/douglasportella/date/ouro"
+    directory = r"/app/date/ouro"
     directory_today = os.path.join(directory, today.strftime('%d-%m-%Y'))
 
     # Cria o diretório se não existir

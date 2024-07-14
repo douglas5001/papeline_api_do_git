@@ -2,7 +2,7 @@
 docker build -t pipeline .
 
 ## Criar container
-docker run -d --name pipeline --network minha_rede -p 8000:8000 pipeline
+docker run -d --name pipeline --network minha_rede -p 8000:8000 -v /Users/douglasportella/date:/app/date pipeline
 
 ## Ver logs em tempo real
 docker logs -f pipeline

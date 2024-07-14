@@ -31,7 +31,7 @@ def job():
     logging.info(f"Job finished at {datetime.now()}.")
 
 # Agenda a função job para executar todos os dias às 20:00
-schedule.every().day.at("20:26").do(job)
+schedule.every().day.at("21:05").do(job)
 
 if __name__ == "__main__":
     logging.info("Scheduler started. Running jobs at 20:00 every day.")

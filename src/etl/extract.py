@@ -30,7 +30,8 @@ def extract_data():
     tempo_inicio = time.time()
 
     today = datetime.now().date()
-    directory = r"/Users/douglasportella/date/bronze"
+    #directory = r"/Users/douglasportella/date/bronze"
+    directory = r"/app/date/bronze"
     directory_today = os.path.join(directory, today.strftime('%d-%m-%Y'))
 
     # Cria o diretório se não existir
