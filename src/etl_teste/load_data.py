@@ -2,6 +2,9 @@ import os
 from sqlalchemy import create_engine, text
 from dotenv import load_dotenv
 import logging
+import glob
+import pandas as pd
+from datetime import datetime
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 # Carrega as variáveis de ambiente do arquivo .env
@@ -28,25 +31,25 @@ def load_data(df_data):
     table_name = 'usuario'
     schema = 'mysql_python'
 
-    #     # Obtém a data atual no formato DDMMYYY
-    #     current_date = datetime.now().strftime('%d-%m-%Y')
+    # # Obtém a data atual no formato DDMMYYY
+    # current_date = datetime.now().strftime('%d-%m-%Y')
+    #
+    # # Define o caminho do diretório base
+    # base_dir = '/Users/douglasportella/date/ouro'
+    #
+    # # Constrói o caminho completo para o diretório do dia atual
+    # dir_path = os.path.join(base_dir, current_date)
+    #
+    # # Encontra o único arquivo Excel na pasta
+    # excel_files = glob.glob(os.path.join(dir_path, '*.xlsx'))
 
-    #     # Define o caminho do diretório base
-    #     base_dir = '/Users/douglasportella/date/ouro'
+    # if len(excel_files) != 1:
+    #     raise FileNotFoundError(f"Esperado um único arquivo Excel em {dir_path}, mas encontrado {len(excel_files)} arquivos.")
+    #
+    # file_path = excel_files[0]
 
-    #     # Constrói o caminho completo para o diretório do dia atual
-    #     dir_path = os.path.join(base_dir, current_date)
-
-    #     # Encontra o único arquivo Excel na pasta
-    #     excel_files = glob.glob(os.path.join(dir_path, '*.xlsx'))
-
-    #     if len(excel_files) != 1:
-    #         raise FileNotFoundError(f"Esperado um único arquivo Excel em {dir_path}, mas encontrado {len(excel_files)} arquivos.")
-
-    #     file_path = excel_files[0]
-
-    #     # Lê o arquivo Excel
-    #     df_data = pd.read_excel(file_path)
+    # Lê o arquivo Excel
+    # df_data = pd.read_excel(file_path)
 
     try:
         table_name = 'usuario'

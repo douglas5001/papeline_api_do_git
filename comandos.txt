@@ -17,3 +17,7 @@ docker network create minha_rede
 docker network connect minha_rede meu_mysql
 
 
+# Para buscar palavra Command + Shift + F
+# Para clonar linha, Command D
+
+

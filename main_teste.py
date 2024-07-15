@@ -1,7 +1,6 @@
-from src.etl.extract import extract_data
-from src.etl.transform import transform_data
-from src.etl.load_data_postgres import load_data_postgres
-from src.etl.load_data import load_data
+from src.etl_teste.extract import extract_data
+from src.etl_teste.transform import transform_data
+from src.etl_teste.load_data import load_data
 from openpyxl.workbook import Workbook
 
 def run_pipeline():
@@ -15,7 +14,7 @@ def run_pipeline():
 
     # Load
     #load_data(df)
-    load_data_postgres(df)
+    load_data(df)
 
     print('ETL finished')
 
